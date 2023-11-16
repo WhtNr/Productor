@@ -6,25 +6,21 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Random;
-
 @Service
-public class SenderController {
+public class PracticalTipSender {
 
-    private static final Logger log = LoggerFactory.getLogger(SenderController.class);
+    private static final Logger log = LoggerFactory.getLogger(PracticalTipSender.class);
 
     private final RabbitTemplate rabbitTemplate;
 
-    public SenderController(final RabbitTemplate rabbitTemplate) {
+    public PracticalTipSender(final RabbitTemplate rabbitTemplate) {
         this.rabbitTemplate = rabbitTemplate;
     }
 
-
     @Scheduled(fixedDelay = 3000L)
-    public void sendData() {
-        MessageController tip = new MessageController("Transfer received and sent successfully.", new Random().nextInt(100), false, LocalDateTime.now() );
+    public void sendPracticalTip() {
+        PracticalTipMessage tip = new PracticalTipMessage("Always use Immutable classes in Java", 1, false);
         rabbitTemplate.convertAndSend(ProductorApplication.EXCHANGE_NAME, ProductorApplication.ROUTING_KEY, tip);
-        log.info("Sending Message...");
+        log.info("Practical Tip sent");
     }
 }
